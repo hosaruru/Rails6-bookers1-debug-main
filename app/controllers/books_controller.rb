@@ -13,7 +13,8 @@ class BooksController < ApplicationController
       flash[:notice] = "Book was successfully created."
       redirect_to book_path(@book.id)
     else
-      render :index
+      flash.now[:alret] = "ソフト名を入力してください"
+      redirect_to root_path
     end
   end
 
@@ -27,18 +28,20 @@ class BooksController < ApplicationController
 
   def update
     @book = Book.find(params[:id])
-    if @book.update()
+    @book.update(book_params)
+    if @book.save
       flash[:notice] = "Book was successfully updated."
       redirect_to book_path(@book.id)
     else
+      flash.now[:alret] = "*は必須です。"
       render :edit
     end
   end
 
   def destroy
-    book = Book.find(params[:id])
-    book.destroy
-    redirect_to books_path
+    @book = Book.find(params[:id])
+    @book.destroy
+    redirect_to root_path
   end
 
   private
